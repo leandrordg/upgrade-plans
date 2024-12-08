@@ -1,8 +1,8 @@
-import Link from "next/link";
+import { Stripe } from "stripe";
 
-import { formatPrice } from "@/lib/utils";
+import { formatPeriod, formatPrice } from "@/lib/utils";
 
-import { Button } from "@/components/ui/button";
+import { PaymentButton } from "@/components/payment-button";
 import {
   Card,
   CardContent,
@@ -11,56 +11,34 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Feature, Plan } from "@prisma/client";
-import { CheckIcon } from "lucide-react";
 
 type Props = {
-  plan: Plan;
-  features: Feature[];
+  plan: Stripe.Plan;
+  product: Stripe.Product;
 };
 
-export function PlanCard({ plan, features }: Props) {
+export function PlanCard({ plan, product }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{plan.name}</CardTitle>
+        <CardTitle>{product.name}</CardTitle>
       </CardHeader>
 
       <CardContent>
         <h1 className="text-4xl font-bold text-primary">
-          {formatPrice(plan.price)}{" "}
+          {formatPrice(plan.amount ?? 0)}{" "}
           <span className="text-xs text-muted-foreground font-normal">
-            /mês
+            {formatPeriod(plan.interval)}
           </span>
         </h1>
 
-        <CardDescription>{plan.description}</CardDescription>
-
-        <ul className="mt-4 space-y-2">
-          {features.map((feature) => (
-            <li key={feature.id} className="flex items-center space-x-2">
-              <CheckIcon className="size-4 text-primary" />
-
-              <span>{feature.name}</span>
-            </li>
-          ))}
-        </ul>
+        <CardDescription>{product.description}</CardDescription>
       </CardContent>
 
       <CardFooter className="mt-auto">
-        <Button size="sm">Fazer upgrade</Button>
-
-        <p className="text-xs text-muted-foreground">
-          Ao fazer upgrade, você concorda com os{" "}
-          <Link href="/tos" className="text-primary">
-            Termos de Serviço
-          </Link>{" "}
-          e a{" "}
-          <Link href="/privacy" className="text-primary">
-            Política de Privacidade
-          </Link>
-          .
-        </p>
+        <PaymentButton id={plan.id}>
+          Fazer upgrade para {product.name}
+        </PaymentButton>
       </CardFooter>
     </Card>
   );
