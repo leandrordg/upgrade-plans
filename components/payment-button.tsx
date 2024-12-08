@@ -2,8 +2,11 @@
 
 import { useCallback } from "react";
 
+import {
+  EmbeddedCheckout,
+  EmbeddedCheckoutProvider,
+} from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -34,7 +37,7 @@ export function PaymentButton({ id, children }: Props) {
     })
       .then((res) => res.json())
       .then((data) => data.client_secret);
-  }, []);
+  }, [id]);
 
   const options = { fetchClientSecret };
 
