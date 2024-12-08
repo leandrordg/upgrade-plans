@@ -11,27 +11,43 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Feature, Plan } from "@prisma/client";
+import { CheckIcon } from "lucide-react";
 
-export function PlanCard() {
+type Props = {
+  plan: Plan;
+  features: Feature[];
+};
+
+export function PlanCard({ plan, features }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Fazer upgrade</CardTitle>
-        <CardDescription>
-          Torne-se um membro premium e tenha acesso a recursos exclusivos.
-        </CardDescription>
+        <CardTitle>{plan.name}</CardTitle>
       </CardHeader>
 
       <CardContent>
         <h1 className="text-4xl font-bold text-primary">
-          {formatPrice(49.99)}{" "}
+          {formatPrice(plan.price)}{" "}
           <span className="text-xs text-muted-foreground font-normal">
             /mês
           </span>
         </h1>
+
+        <CardDescription>{plan.description}</CardDescription>
+
+        <ul className="mt-4 space-y-2">
+          {features.map((feature) => (
+            <li key={feature.id} className="flex items-center space-x-2">
+              <CheckIcon className="size-4 text-primary" />
+
+              <span>{feature.name}</span>
+            </li>
+          ))}
+        </ul>
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="mt-auto">
         <Button size="sm">Fazer upgrade</Button>
 
         <p className="text-xs text-muted-foreground">

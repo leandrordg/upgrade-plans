@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import { SignOutButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
@@ -19,7 +20,7 @@ import { BoltIcon, LogOutIcon, UserRoundIcon } from "lucide-react";
 export async function UserNav() {
   const user = await currentUser();
 
-  if (!user) return null;
+  if (!user) return notFound();
 
   const primaryEmail = user.emailAddresses.find(
     (email) => email.id === user.primaryEmailAddressId
