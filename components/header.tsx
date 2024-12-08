@@ -8,7 +8,10 @@ import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 export function Header() {
   return (
     <header className="flex items-center gap-4 h-14 px-6 lg:px-10">
-      <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">
+      <Link
+        href="/"
+        className="text-sm font-medium hover:text-primary transition-colors"
+      >
         Início
       </Link>
 

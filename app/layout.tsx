@@ -4,7 +4,7 @@ import "./globals.css";
 
 import { Header } from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, GoogleOneTap } from "@clerk/nextjs";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,6 +33,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <GoogleOneTap />
             <Header />
             <main className="max-w-7xl mx-auto p-6 lg:p-10">{children}</main>
           </ThemeProvider>

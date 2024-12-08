@@ -15,7 +15,12 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BoltIcon, LogOutIcon, UserRoundIcon } from "lucide-react";
+import {
+  LogOutIcon,
+  PodcastIcon,
+  ShieldIcon,
+  UserRoundIcon,
+} from "lucide-react";
 
 export async function UserNav() {
   const user = await currentUser();
@@ -48,7 +53,7 @@ export async function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Link href={`/accounts/${user.id}`}>
+          <Link href={`/account`}>
             <DropdownMenuItem>
               Meu perfil
               <DropdownMenuShortcut>
@@ -56,11 +61,19 @@ export async function UserNav() {
               </DropdownMenuShortcut>
             </DropdownMenuItem>
           </Link>
-          <Link href={`/settings`}>
+          <Link href={`/account/security`}>
             <DropdownMenuItem>
-              Configurações
+              Segurança
               <DropdownMenuShortcut>
-                <BoltIcon className="size-4" />
+                <ShieldIcon className="size-4" />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </Link>
+          <Link href={`/account/plans`}>
+            <DropdownMenuItem>
+              Planos
+              <DropdownMenuShortcut>
+                <PodcastIcon className="size-4" />
               </DropdownMenuShortcut>
             </DropdownMenuItem>
           </Link>

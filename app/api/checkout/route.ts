@@ -1,8 +1,14 @@
+import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 import { Stripe } from "stripe";
 
 export async function POST(request: Request) {
+  const user = await currentUser();
+
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+
   const { id }: { id: string } = await request.json();
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {

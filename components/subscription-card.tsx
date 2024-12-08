@@ -1,9 +1,9 @@
 import Link from "next/link";
 
+import { getPlanBySubscription } from "@/lib/stripe";
 import { formatPeriod, formatPrice } from "@/lib/utils";
 import { Stripe } from "stripe";
 
-import { PaymentButton } from "@/components/payment-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,17 +16,15 @@ import {
 import { PenIcon } from "lucide-react";
 
 type Props = {
-  plan: Stripe.Plan;
-  product: Stripe.Product;
-  subscription: Stripe.Subscription | null;
+  subscription: Stripe.Subscription;
 };
 
-export function PlanCard({ plan, product, subscription }: Props) {
-  const isActive = subscription?.items.data.some(
-    (item) => item.plan.id === plan.id
+export async function SubscriptionCard({ subscription }: Props) {
+  const plan = await getPlanBySubscription(
+    subscription.items.data[0].plan.id
   );
 
-  if (isActive) return null;
+  const product = plan.product as Stripe.Product;
 
   return (
     <Card>
@@ -46,17 +44,11 @@ export function PlanCard({ plan, product, subscription }: Props) {
       </CardContent>
 
       <CardFooter className="mt-auto">
-        {subscription && isActive ? (
-          <Button size="sm" variant="secondary" asChild>
-            <Link href={`/account/plans`}>
-              Editar plano atual <PenIcon />
-            </Link>
-          </Button>
-        ) : (
-          <PaymentButton id={plan.id}>
-            Fazer upgrade para {product.name}
-          </PaymentButton>
-        )}
+        <Button size="sm" variant="secondary" asChild>
+          <Link href={`/account/plans`}>
+            Editar plano atual <PenIcon />
+          </Link>
+        </Button>
       </CardFooter>
     </Card>
   );
