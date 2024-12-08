@@ -1,6 +1,10 @@
-import { Webhook } from "svix";
 import { headers } from "next/headers";
+
 import { WebhookEvent } from "@clerk/nextjs/server";
+import { Webhook } from "svix";
+
+import { db } from "@/lib/db";
+import { Plan } from "@prisma/client";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -47,12 +51,66 @@ export async function POST(req: Request) {
     });
   }
 
-  // Do something with payload
-  // For this guide, log payload to console
   const { id } = evt.data;
   const eventType = evt.type;
 
-  console.log(`Received ${eventType} event with ID: ${id}`);
+  switch (eventType) {
+    case "user.created":
+      const newUserEmail = evt.data.email_addresses.find(
+        (email) => email.id === evt.data.primary_email_address_id
+      )?.email_address;
+
+      const newUserPhone = evt.data.phone_numbers.find(
+        (phone) => phone.id === evt.data.primary_phone_number_id
+      )?.phone_number;
+
+      await db.user.create({
+        data: {
+          id,
+          firstName: evt.data.first_name as string,
+          lastName: evt.data.last_name || "",
+          username: evt.data.username as string,
+          email: newUserEmail as string,
+          phone: newUserPhone as string,
+          image: evt.data.image_url as string,
+          createdAt: new Date(evt.data.created_at),
+          updatedAt: new Date(evt.data.updated_at),
+          activePlan: Plan.FREE,
+        },
+      });
+      break;
+    case "user.updated":
+      const updatedUserEmail = evt.data.email_addresses.find(
+        (email) => email.id === evt.data.primary_email_address_id
+      )?.email_address;
+
+      const updatedUserPhone = evt.data.phone_numbers.find(
+        (phone) => phone.id === evt.data.primary_phone_number_id
+      )?.phone_number;
+
+      await db.user.update({
+        where: {
+          id,
+        },
+        data: {
+          firstName: evt.data.first_name as string,
+          lastName: evt.data.last_name || "",
+          username: evt.data.username as string,
+          email: updatedUserEmail as string,
+          phone: updatedUserPhone as string,
+          image: evt.data.image_url as string,
+          updatedAt: new Date(evt.data.updated_at),
+        },
+      });
+      break;
+    case "user.deleted":
+      await db.user.delete({
+        where: {
+          id,
+        },
+      });
+      break;
+  }
 
   return new Response("Webhook received", { status: 200 });
 }

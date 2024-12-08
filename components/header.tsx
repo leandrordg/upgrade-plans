@@ -1,16 +1,22 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { UserNav } from "@/components/user-nav";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 
 export function Header() {
   return (
     <header className="flex items-center gap-4 h-14 border-b shadow-sm px-6 lg:px-10">
-      <Link href="/">Início</Link>
+      <Link
+        href="/"
+        className="text-sm text-muted-foreground hover:text-primary"
+      >
+        Início
+      </Link>
 
       <div className="flex items-center gap-4 ml-auto">
         <SignedIn>
-          <UserButton />
+          <UserNav />
         </SignedIn>
         <SignedOut>
           <Button variant="outline" size="sm" asChild>
