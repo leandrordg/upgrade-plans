@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 import { Header } from "@/components/header";
+import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = localFont({
@@ -24,10 +25,17 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="pt-BR">
+      <html lang="pt-BR" suppressHydrationWarning>
         <body className={`${geistSans.variable} antialiased`}>
-          <Header />
-          <main className="max-w-7xl mx-auto p-6 lg:p-10">{children}</main>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            <main className="max-w-7xl mx-auto p-6 lg:p-10">{children}</main>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

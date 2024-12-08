@@ -33,7 +33,7 @@ export async function UserNav() {
           alt={user.username!}
           width={56}
           height={56}
-          className="size-7 rounded-full bg-muted ring-1 ring-muted-foreground"
+          className="size-7 rounded-full bg-muted"
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>

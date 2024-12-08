@@ -7,20 +7,54 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Plan {
+enum PlanType {
   FREE
   PREMIUM
 }
 
 model User {
-  id         String   @id @default(cuid())
-  firstName  String
-  lastName   String?
-  username   String   @unique
-  email      String   @unique
-  phone      String?
-  image      String?
-  activePlan Plan     @default(FREE)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id           String        @id @default(cuid())
+  firstName    String
+  lastName     String?
+  username     String        @unique
+  email        String        @unique
+  phone        String?
+  image        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  activePlan   PlanType      @default(FREE)
+  subscription Subscription?
+}
+
+model Plan {
+  id            String         @id @default(cuid())
+  name          String
+  description   String
+  price         Float
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  features      Feature[]
+  subscriptions Subscription[]
+}
+
+model Feature {
+  id          String   @id @default(cuid())
+  plan        Plan     @relation(fields: [planId], references: [id])
+  planId      String
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  plan      Plan     @relation(fields: [planId], references: [id])
+  planId    String
+  startDate DateTime @default(now())
+  endDate   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

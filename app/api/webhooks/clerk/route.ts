@@ -4,7 +4,7 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { Webhook } from "svix";
 
 import { db } from "@/lib/db";
-import { Plan } from "@prisma/client";
+import { PlanType } from "@prisma/client";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
           image: evt.data.image_url as string,
           createdAt: new Date(evt.data.created_at),
           updatedAt: new Date(evt.data.updated_at),
-          activePlan: Plan.FREE,
+          activePlan: "FREE" as PlanType,
         },
       });
       break;
