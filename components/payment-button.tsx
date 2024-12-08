@@ -23,9 +23,7 @@ type Props = {
   id: string;
 };
 export function PaymentButton({ id, children }: Props) {
-  const stripePromise = loadStripe(
-    process.env.STRIPE_PUBLISHABLE_KEY!
-  );
+  const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
   const fetchClientSecret = useCallback(async () => {
     return fetch("/api/checkout", {
@@ -54,7 +52,7 @@ export function PaymentButton({ id, children }: Props) {
           </DialogDescription>
         </DialogHeader>
 
-        <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
+        <EmbeddedCheckoutProvider stripe={stripe} options={options}>
           <EmbeddedCheckout className="max-h-[512px] overflow-y-auto rounded-lg" />
         </EmbeddedCheckoutProvider>
       </DialogContent>
