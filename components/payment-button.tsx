@@ -24,7 +24,7 @@ type Props = {
 };
 export function PaymentButton({ id, children }: Props) {
   const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+    process.env.STRIPE_PUBLISHABLE_KEY!
   );
 
   const fetchClientSecret = useCallback(async () => {
